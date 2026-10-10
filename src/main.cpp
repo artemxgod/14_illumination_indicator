@@ -1,18 +1,27 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+const int leds[] = {3, 4, 5, 6};
+const int LIGHT = A0;       // фоторезистор на A0
+const int MIN_LIGHT = 200;  // нижний порог освещённости
+const int MAX_LIGHT = 900;  // верхний порог освещённости
+int illuminationLevel = 0;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  for (int i = 0; i < 4; i++) {
+    pinMode(leds[i], OUTPUT);
+ }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  illuminationLevel = analogRead(LIGHT);
+  illuminationLevel = map(illuminationLevel, MIN_LIGHT, MAX_LIGHT, 4, 0);
+  illuminationLevel = constrain(illuminationLevel, 0, 4);
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  for (int i = 0; i < 4; i++) {
+    if (i >= illuminationLevel)
+      digitalWrite(leds[i], HIGH);
+    else 
+      digitalWrite(leds[i], LOW);    
+  }
+  delay(1000);
 }
